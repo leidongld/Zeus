@@ -7,6 +7,7 @@ import com.example.leidong.zeus_core.net.callback.IFailure;
 import com.example.leidong.zeus_core.net.callback.IRequest;
 import com.example.leidong.zeus_core.net.callback.ISuccess;
 import com.example.leidong.zeus_core.net.callback.RequestCallbacks;
+import com.example.leidong.zeus_core.net.download.DownloadHandler;
 import com.example.leidong.zeus_core.ui.LoaderStyle;
 import com.example.leidong.zeus_core.ui.ZeusLoader;
 
@@ -27,6 +28,9 @@ public class RestClient {
     private final Map<String, Object> PARAMS = RestCreater.getParams();
 
     private final IRequest REQUEST;
+    private final String DOWNLOAD_DIR;
+    private final String EXTENSION;
+    private final String NAME;
     private final ISuccess SUCCESS;
     private final IFailure FAILURE;
     private final IError ERROR;
@@ -46,7 +50,10 @@ public class RestClient {
             RequestBody body,
             Context context,
             LoaderStyle loaderStyle,
-            File file) {
+            File file,
+            String downloadDir,
+            String extension,
+            String name) {
         this.URL = url;
         this.PARAMS.putAll(params);
         this.REQUEST = request;
@@ -57,6 +64,9 @@ public class RestClient {
         this.CONTEXT = context;
         this.LOADER_STYLE = loaderStyle;
         this.FILE = file;
+        this.DOWNLOAD_DIR = downloadDir;
+        this.EXTENSION = extension;
+        this.NAME = name;
     }
 
     public static RestClientBuilder builder(){
@@ -145,4 +155,10 @@ public class RestClient {
     public final void delete(){
         request(HttpMethods.DELETE);
     }
+
+    public final void download(){
+        new DownloadHandler(URL, REQUEST, DOWNLOAD_DIR, EXTENSION, NAME, SUCCESS, FAILURE, ERROR)
+                .handleDowmload();
+    }
+
 }
